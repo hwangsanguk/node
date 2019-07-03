@@ -6,6 +6,7 @@ const port = 3000;
 
 //가장위에 있어야함 그래야 처리하기 편함
 app.use(express.static(path.join(__dirname, 'public')));
+//public이 기본 루트이다
 
 app.get('/', (req, res) => {
     res.send('<img src="/images/img1.jpg">');
