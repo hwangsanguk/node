@@ -7,9 +7,9 @@ console.log(a + ' ' + b + ' ' + c);
 
 //console.dir 객체 출력
 const obj = {
-        outside: {
-            inside: {
-                key: 'value',
+        outside: { // depth:0
+            inside: { // depth:1
+                key: 'value', //depth:2
             }
         }
 }

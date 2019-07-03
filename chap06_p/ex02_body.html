@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>Document</title>
+</head>
+<!-- post방식은 내부적으로 보냄 -->
+<body>
+   <form action='http://localhost:3000/post' method="POST"> 
+       <input type="text" value="이름" name="name"> 
+       <!-- name 속성의 값으로 들어감 -->
+       
+       <input type="text" value="id" name="id"> 
+       <!-- Id 속성의 값으로 들어감 -->
+       
+       <input type="text" value="password" name="password"> 
+       <!-- password 속성의 값으로 들어감 -->
+       
+       <input type="submit" value="전송">
+   </form>
+</body>
+</html>
