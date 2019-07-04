@@ -1,0 +1,69 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        $(function () {
+            $.ajax({//비동기 함수,jquery에서 사용
+                type: 'GET', //GET방식으로 요청
+                url: '/api/signin',
+                success: function (data) {//성공하면 success
+                    console.log('success');
+                    console.log(data);
+                    $.each(data, function (i, item) { // {배열의 index a= [1,2,3,4,5]-> a[i] i=0,1,2,3,4 } ,{item은 배열의 객체를 가져오는것}
+                        //item.carNumber....numofOwnerChange 까지 다 실습.js의 var 배열에 넣어준 변수명과 동일 해야함   
+                        $('#list').append(`
+                       <tr>
+                        <td>${data[i].name}</td> 
+                        <td>${data[i].age}</td>
+                        <td>${data[i].Pnumber}</td>
+                        <td>${data[i].id}</td>
+                        <td>${data[i].password}</td>
+                        <td>${data[i].passwordok}</td>
+                        </tr>
+                       `)
+                    })
+                },
+                error: function (err) {//실패하면 err
+                    console.log('err');
+                }
+            });
+        });
+
+    </script>
+    <style>
+    tbody,th, td {
+        border: 1px solid black;
+        width:150px;
+        text-align:center;
+    }
+    </style>
+</head>
+
+<body>
+    <h1>회원가입 성공</h1>
+    <table>
+        <tr>
+            <th>이름</th>
+            <th>나이</th>
+            <th>핸드폰</th>
+            <th>id</th>
+            <th>비밀번호</th>
+            <th>비밀번호확인</th>
+        </tr>
+        <tbody id="list">
+
+        </tbody>
+    </table>
+    <a href='/'>홈페이지 이동</a>
+</body>
+
+</html>

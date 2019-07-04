@@ -1,0 +1,83 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>차량 사고 조회</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        // $(function) 이 $(document)ready랑 같은 역할을 함
+        $(function () {
+            $("#click").click(function () {
+                $.ajax({//비동기 함수,jquery에서 사용
+                    type: 'GET', //GET방식으로 요청
+                    url: '/api/carlist',
+                    success: function (data) {//성공하면 success
+                        console.log('success');
+                        console.log(data);
+                        $.each(data, function (i, item) { // {배열의 index a= [1,2,3,4,5]-> a[i] i=0,1,2,3,4 } ,{item은 배열의 객체를 가져오는것}
+                        //item.carNumber....numofOwnerChange 까지 다 실습.js의 var 배열에 넣어준 변수명과 동일 해야함   
+                        $('#list').append(`
+                       <tr><td>${item.carNumber}</td> 
+                        <td>${item.owner}</td>
+                        <td>${item.model}</td>
+                        <td>${item.company}</td>
+                        <td>${item.numOfAccident}</td>
+                        <td>${item.numOfOwnerChange}</td>
+                        </tr>
+                       `)
+                        })
+
+
+                    },
+                    error: function (err) {//실패하면 err
+                        console.log('err');
+                    }
+                });
+            });
+
+        });
+
+    </script>
+    <style>
+        th {
+            border: 1px solid black;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <form>
+        <h1>차량 검색</h1>
+        <input type="text" name="carnumber" placeholder="차량 번호 입력">
+        <input type="text" name="owner" placeholder="소유주">
+        <input type="text" name="model" placeholder="모델"><br>
+        <input type="text" name="company" placeholder="회사">
+        <input type="text" name="numofaccident" placeholder="사고횟수">
+        <input type="text" name="numofownerchange" placeholder="소유주변경횟수">
+        <input type="button" id="click" name="검색" value="gg"> 
+        <!-- type을 submit으로 하게 되면 페이지가 새로고침이 되어서 추가가 되지 않음 중요 -->
+    </form>
+    <hr>
+    <table>
+        <tr>
+            <th>CarNumber</th>
+            <th>Owner</th>
+            <th>Model</th>
+            <th>Company</th>
+            <th>numofaccident</th>
+            <th>numofownerchange</th>
+        </tr>
+        <tbody id="list">
+
+        </tbody>
+    </table>
+</body>
+
+</html>

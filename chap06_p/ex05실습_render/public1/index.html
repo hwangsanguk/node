@@ -9,47 +9,76 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <style>
-         /* * {
+        /* * {
             border: 1px solid red;
         }  */
+        .jumbotron {
+            position: relative;
+        }
+
+        body {
+            background-image: url(./jpg/images2.jpg);
+            background-repeat: no-repeat;
+            background-size: 100% 100% ;
+        }
+
+        #head {
+            /* 머리 부분과 로그인, 회원가입의 공간 */
+            margin-bottom: 12px;
+            padding: 20px;
+        }
 
         .head1 {
+            /* 이미지 위치 */
             text-align: center;
+
         }
+
         .col-sm-8 {
+            /* a 박스 위치 가운대 조정 */
             text-align: center;
         }
-        a{
-            background-color: rgb(125, 168, 185);
-            color: white;
-            border: 1px solid black;
+
+        .col {
+            /* 박스 크기 조정 */
+            width: 100%;
+            height: 900px;
+        
+        }
+
+        .a1 {
+            /* 로그인과 회원가입 박스 css */
+            background-color: none;
+            color: rgb(63, 121, 228);
+            border: 1px solid rgb(63, 121, 228);
+            padding: 5px 10px;
             text-decoration: none;
- 
+            position: relative;
+            top: 40%;
+            left: 45%;
         }
 
 
-    
-    
-    
-      
+        .a1:hover {
+            background-color: white;
+            text-decoration: none;
+        }
     </style>
 
 </head>
 
 <body>
-    <div class="jumbotron jumbotron-fluid">
+    <div class="jumbotron jumbotron-fluid" id="head">
         <div class="container head1">
-            <h1>차량 조회 서비스</h1>
+            <a href=""><img src="./jpg/logo.png" alt=""></a>
         </div>
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-8">
-                    <a href='http://localhost:3000/login_form'>로그인</a>
-                    <a href='http://localhost:3000/signin_form'>회원가입</a>
+            <div class="col">
+                <a class="a1" href='http://localhost:3000/login_form'>로그인</a>
+                <a class="a1" href='http://localhost:3000/signin_form'>회원가입</a>
             </div>
-            <div class="col-sm-2"></div>
         </div>
     </div>
 </body>
