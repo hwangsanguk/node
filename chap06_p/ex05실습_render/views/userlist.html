@@ -1,0 +1,69 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        
+
+        function serializeObject($form) {
+            var unindexed_array = $form.serializeArray();
+            var indexed_array = {};
+
+            $.map(unindexed_array, function (n, i) {
+                indexed_array[n['name']] = n['value'];
+            });
+
+            return indexed_array;
+        }
+        $(function(){
+        $('#submit').click(function () {
+            let newData = serializeObject($('form[name=submit]'));;
+            $.ajax({
+                type: 'POST',
+                url: '/api/regcar',
+                dataType: 'json',
+                data: newData,
+                success: function (data) {//성공하면 success
+                    console.log('success');
+                    console.log(data);
+                }, error: function (err) {//실패하면 err
+                    console.log('err');
+                }
+
+
+            });
+        });
+    })
+;
+
+
+    </script>
+    <style>
+        tbody,
+        th,
+        td {
+            border: 1px solid black;
+            width: 150px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <form action='/api/regcar' name="submit" method="POST">
+        <input type="text" value="이름" name="carNumber">
+        <input type="text" value="id" name="owner">
+        <input type="text" value="Pnumber" name="model">
+        <input type="button" id="submit" value="전송">
+    </form>
+</body>
+
+</html>

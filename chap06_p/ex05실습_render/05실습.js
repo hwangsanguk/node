@@ -12,12 +12,17 @@ app.engine('html', require('ejs').renderFile);
 app.use(express.urlencoded({
     extended: false
 }));
+app.use(express.json())
 
 app.use(express.static(path.join(__dirname, 'public1')));
 
 
 app.get('/login_form', function(req, res){
     res.render('login_form.html');
+});
+
+app.get('/user', function(req, res){
+    res.render('userlist.html');
 });
 
 app.post('/login_form',(req,res)=>{
@@ -49,6 +54,8 @@ app.get('/api/signin', function(req, res){
 //유저등록 끝
 
 
+
+
 var sampleCarList = [{
     carNumber: '11주1111',
     owner: '홍길동',
@@ -76,6 +83,15 @@ app.get('/carlist', function(req, res){
 app.get('/api/carlist', function(req, res){
     res.json(sampleCarList);
 });
+
+app.post('/api/regcar',(req,res)=>{
+    console.log(req.body);
+    sampleCarList.push(req.body);
+    res.json(sampleCarList);
+    
+    // sampleCarList.push(req.body);
+    
+})
 
 
 app.listen(port, ()=>{
