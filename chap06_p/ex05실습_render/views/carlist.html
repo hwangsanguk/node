@@ -22,7 +22,8 @@
                         $.each(data, function (i, item) { // {배열의 index a= [1,2,3,4,5]-> a[i] i=0,1,2,3,4 } ,{item은 배열의 객체를 가져오는것}
                         //item.carNumber....numofOwnerChange 까지 다 실습.js의 var 배열에 넣어준 변수명과 동일 해야함   
                         $('#list').append(`
-                       <tr><td>${item.carNumber}</td> 
+                        <tr>
+                        <td>${item.carNumber}</td> 
                         <td>${item.owner}</td>
                         <td>${item.model}</td>
                         <td>${item.company}</td>

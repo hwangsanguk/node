@@ -1,0 +1,61 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>차량 사고 조회</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+
+    </script>
+    <style>
+        th, tr, td {
+            border: 1px solid black;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <form>
+        <h1>차량 검색</h1>
+        <input type="text" name="carnumber" placeholder="차량 번호 입력">
+        <input type="text" name="owner" placeholder="소유주">
+        <input type="text" name="model" placeholder="모델"><br>
+        <input type="text" name="company" placeholder="회사">
+        <input type="text" name="numofaccident" placeholder="사고횟수">
+        <input type="text" name="numofownerchange" placeholder="소유주변경횟수">
+        <input type="button" id="click" name="검색" value="gg"> 
+        <!-- type을 submit으로 하게 되면 페이지가 새로고침이 되어서 추가가 되지 않음 중요 -->
+    </form>
+    <hr>
+    <table>
+        <tr>
+            <th>CarNumber</th>
+            <th>Owner</th>
+            <th>Model</th>
+            <th>Company</th>
+            <th>numofaccident</th>
+            <th>numofownerchange</th>
+        </tr>
+        <tbody id="list">
+            <% for(let i=0; i<list.length; i++){%>
+            <tr>
+                <td><%= list[i].carNumber %></td>
+                <td><%= list[i].owner %></td>
+                <td><%= list[i].model %></td>
+                <td><%= list[i].company %></td>
+                <td><%= list[i].numOfAccident %></td>
+                <td><%= list[i].numOfOwnerChange %></td>
+            </tr>
+         <%}%>
+        </tbody>
+    </table>
+</body>
+
+</html>

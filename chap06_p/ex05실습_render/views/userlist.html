@@ -11,8 +11,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <script>
-        
 
+        //페이지 내에서 추가 버튼 눌러 리스트 추가
         function serializeObject($form) {
             var unindexed_array = $form.serializeArray();
             var indexed_array = {};
@@ -23,26 +23,25 @@
 
             return indexed_array;
         }
-        $(function(){
-        $('#submit').click(function () {
-            let newData = serializeObject($('form[name=submit]'));;
-            $.ajax({
-                type: 'POST',
-                url: '/api/regcar',
-                dataType: 'json',
-                data: newData,
-                success: function (data) {//성공하면 success
-                    console.log('success');
-                    console.log(data);
-                }, error: function (err) {//실패하면 err
-                    console.log('err');
-                }
-
-
+        $(function () {
+            $('#submit').click(function () {
+                let newData = serializeObject($('form[name=submit]'));;
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/regcar',
+                    dataType: 'json',
+                    data: newData,
+                    success: function (data) {//성공하면 success
+                        console.log('success');
+                        console.log(data);
+                    }, error: function (err) {//실패하면 err
+                        console.log('err');
+                    }
+                });
             });
-        });
-    })
-;
+
+        })
+            ;
 
 
     </script>
@@ -64,6 +63,16 @@
         <input type="text" value="Pnumber" name="model">
         <input type="button" id="submit" value="전송">
     </form>
+    <hr>
+    <table>
+        <tbody id="list">
+
+        </tbody>
+    </table>
+
+    <body>
+
+    </body>
 </body>
 
 </html>
