@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app =express();
+const cookieparser = require('cookie-parser');
 const port = 3000;
 
 
@@ -15,22 +16,33 @@ app.engine('html', require('ejs').renderFile);//engine setting
 app.use(express.urlencoded({
     extended: false//querystring 모듈 사용
 }));
-app.use(express.json())
+app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'public1')));
+app.use(cookieparser());
 
 
+// LOGIN_FORM
 app.get('/login_form', function(req, res){
+    
     res.render('login_form.html');
-});
 
-app.get('/user', function(req, res){
-    res.render('userlist.html');
 });
 
 app.post('/login_form',(req,res)=>{
     console.log(req.body); 
-    res.render('login.html');
+    res.cookie('user',req.body);
+    res.redirect('/login'); 
+    //login_form.html 에서 req.body정보를 cookie로 저장하여
+    // browser에 저장하고 브라우저에서 /login으로 redirect해줌
+});
+app.get('/login',(req,res)=>{
+    console.log(req.body);
+    res.render('./login.html', {cookie: req.cookies});
+}) //cookie: req.cookies 는 browser에 저장되어있는 cookie를 가져옴
+//
+app.get('/user', function(req, res){
+    res.render('userlist.html');
 });
 
 
@@ -99,6 +111,20 @@ app.post('/api/regcar',(req,res)=>{
     // sampleCarList.push(req.body);
     
 })
+//Cookie를 이용
+app.get('/test/setCookie',(req,res)=>{
+ console.log('/test/setCookie');
+
+ res.cookie('user',{'name':'황길동','id':'lall21'});
+
+ res.redirect('/test/getCookie');
+})
+app.get('/test/getCookie',(req,res)=>{
+    console.log(req.cookies);
+    
+    res.render('./test/getcookie.html', {cookie: req.cookies});
+})
+// Cookie
 
 app.get('/ejs', (req,res)=>{
     console.log(req.body);
@@ -106,6 +132,7 @@ app.get('/ejs', (req,res)=>{
     res.render('ejs.html', {userid:'aaaa', name:'황상욱',loop:5, title:"EJS"})
     console.log('0번 구역');
 })
+
 app.get('/carlist2',(req,res)=>{
     console.log(req.body);
     res.render('carlist2.html',{list:sampleCarList})
