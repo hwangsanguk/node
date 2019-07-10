@@ -7,6 +7,10 @@ const session = require('express-session');
 const FileStore = require('session-file-store')(session);
 var hasher = require('pbkdf2-password')();
 const morgan = require('morgan');
+const fs = require('fs');
+const flash = require('connect-flash');
+
+var sampleuserList={ };
 
 //html 렌더링 설정 ,ejs
 app.set('views', path.join(__dirname,'views'));
@@ -22,7 +26,23 @@ app.use(session({
  //coockie사용 
 app.use(cookieparser());
 app.use(morgan('dev'));
+app.use(flash());
+app.use(function(req,res,next) {
+    res.locals.user = req.session.user;
+    next();
+ });
+ 
 
+
+
+// fs.writeFileSync('carlist/data/userlist.json' ,JSON.stringify( sampleuserList, null, 2));
+
+if (fs.existsSync('carlist/data/userlist.json')){
+    let rawdata = fs.readFileSync('carlist/data/userlist.json');
+sampleuserList = JSON.parse(rawdata);
+console.log(sampleuserList);
+
+}
 
 
 
@@ -59,8 +79,7 @@ app.get('/user', function(req, res){
 
 //Login_session 시작
 app.get('/login_form', function(req, res){
-    
-    res.render('login_form.html');
+    res.render('login_form.html',{msg: req.flash('fmsg')});
 
 })
 
@@ -71,50 +90,40 @@ app.post('/login_form', (req, res) => {
     console.log('userid = ', userid);
     console.log('password = ', password);
     console.log('userlist = ', sampleuserList);
-    let bFound = false;
-    for (let i = 0; i <sampleuserList.length; i++){
-        let user = sampleuserList[i];
-        console.log(sampleuserList[i]);
-        if( userid === user.userid){
-            console.log('[found] user = ', userid);
-            bFound = true;
-            return hasher ({
-                password : password,
-                salt: user.salt
-            }, function(err, pass, salt, hash){
-                if(err) {
-                    console.log('ERR : ', err);
-                    
-                }
-                if (hash === user.password){
-                    console.log('INFO :', userid, ' 로그인 성공');
 
-                    req.session.user = sampleuserList[i];
-                    req.session.save(function () {
-                        res.redirect('/carlist2');
-                    })
-                    return;
-                }else{
-                    res.redirect('/login_form');
-                    return;
-                }
-            });
-        }
-        if (bFound) break;
+    let user = sampleuserList[userid];
+
+    if (user){
+        hasher({
+            password: password,
+            salt: user.salt
+        }, function(err, pass, salt, hash){
+            if (err){
+                console.log('ERR', err);
+                req.flash('fmsg','에러발생');
+                res.redirect('login_form');
+            }
+            if (hash === user.password){
+                console.log('INFO :', userid, ' 로그인 성공');
+
+                req.session.user = sampleuserList[userid];
+                req.session.save(function(){
+                    res.redirect('/carlist2');
+                })
+                return;
+            } else{
+                console.log('패스워드 오류');
+                req.flash('fmsg','패스워드틀림');
+                res.redirect('login_form')
+                
+            }
+        });
+    }else{
+        req.flash('fmsg','아이디없음');
+        res.redirect('login_form');
     }
 
-    if(!bFound){
-        console.log('not found');
-    }
-    res.redirect('/login_form')
- })
- 
- app.get('/login', (req, res) => {
-    console.log('/login');
-    res.render('login.html', {
-        myid : req.session.myid
-    });
- })
+});
  //Login 끝
 
 
@@ -123,7 +132,7 @@ app.post('/login_form', (req, res) => {
 app.get('/signin_form', function(req, res){
     res.render('signin_form.html');
 });
-var sampleuserList=[]
+
 
 app.post('/signin',(req,res)=>{
     let userid = req.body.id;
@@ -148,13 +157,18 @@ app.post('/signin',(req,res)=>{
         name: name,
         pnumber: pnumber
     }
-    sampleuserList.push(user);
+    // sampleuserList.push(user); //배열을 사용하는 사람은 push로 진행
+    sampleuserList[userid] = user;
+    fs.writeFileSync('carlist/data/userlist.json', JSON.stringify(sampleuserList, null,2));
+
     console.log('user added : ', user);
     res.redirect('/login_form');
     });
 
 });
-// 암호화 종료
+//
+
+
 
 app.get('/main', (req,res)=>{
     res.render('main.html');
@@ -232,6 +246,12 @@ app.get('/test/setsession', (req, res) => {
         myname : req.session.myname,
         myid : req.session.myid
     });
+ })
+
+ app.get('/test/setlocals',(req,res)=>{
+     res.locals.test2 = 'test2';
+     res.locals.user = req.session.user;
+     res.render('test/locals.html', {test1: '이런이런'});
  })
  
 //session
