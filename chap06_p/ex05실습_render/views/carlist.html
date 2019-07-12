@@ -9,76 +9,103 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script>
-        // $(function) 이 $(document)ready랑 같은 역할을 함
-        $(function () {
-            $("#click").click(function () {
-                $.ajax({//비동기 함수,jquery에서 사용
-                    type: 'GET', //GET방식으로 요청
-                    url: '/api/carlist',
-                    success: function (data) {//성공하면 success
-                        console.log('success');
-                        console.log(data);
-                        $.each(data, function (i, item) { // {배열의 index a= [1,2,3,4,5]-> a[i] i=0,1,2,3,4 } ,{item은 배열의 객체를 가져오는것}
-                        //item.carNumber....numofOwnerChange 까지 다 실습.js의 var 배열에 넣어준 변수명과 동일 해야함   
-                        $('#list').append(`
-                        <tr>
-                        <td>${item.carNumber}</td> 
-                        <td>${item.owner}</td>
-                        <td>${item.model}</td>
-                        <td>${item.company}</td>
-                        <td>${item.numOfAccident}</td>
-                        <td>${item.numOfOwnerChange}</td>
-                        </tr>
-                       `)
-                        })
+<style>
+td{
+ width: 15%;
+}
+</style>
+<script>
+function searchByCarNum(){
+    let searchText = $('#searchtext1').val();
+    let $target = $('#list');
 
+    $.ajax({
+        type: 'POST',
+        url: '/api/search',
+        dataType : 'json',
+        data : {
+            "searchText": searchText
+        },
+        success: function(item){
+            console.log('success');
+            console.log(item);
 
-                    },
-                    error: function (err) {//실패하면 err
-                        console.log('err');
-                    }
-                });
-            });
-
-        });
-
-    </script>
-    <style>
-        th {
-            border: 1px solid black;
+            //target update
+            $target.empty();
+            $target.append(`
+            <tr>
+                <td>1</td>
+                <td>${item.carNumber}</td>
+                <td>${item.owner}</td>
+                <td>${item.model}</td>
+                <td>${item.company}</td>
+                <td>${item.numoOfAccident}</td>
+                <td>${item.numOfOwnerChange}</td>
+                <tr>
+                `);
         }
-    </style>
-
+    });
+}
+</script>
 
 </head>
 
 <body>
-    <form>
-        <h1>차량 검색</h1>
-        <input type="text" name="carnumber" placeholder="차량 번호 입력">
-        <input type="text" name="owner" placeholder="소유주">
-        <input type="text" name="model" placeholder="모델"><br>
-        <input type="text" name="company" placeholder="회사">
-        <input type="text" name="numofaccident" placeholder="사고횟수">
-        <input type="text" name="numofownerchange" placeholder="소유주변경횟수">
-        <input type="button" id="click" name="검색" value="gg"> 
-        <!-- type을 submit으로 하게 되면 페이지가 새로고침이 되어서 추가가 되지 않음 중요 -->
-    </form>
+
+
+    <div class="jumbotron">
+        <h1>Car List</h1>
+
+        <form action="/carlist" name="regform" class="form-inline" method=POST>
+
+            <input type="text" class="form-control" name="carNumber" value="" placeholder="차량번호">
+            <input type="text" class="form-control" name="owner" value="" placeholder="소유자">
+            <input type="text" class="form-control" name="model" value="" placeholder="모델">
+            <input type="text" class="form-control" name="company" value="" placeholder="제조사">
+            <input type="number" class="form-control" name="numOfAccident" value="" placeholder="사고횟수">
+            <input type="number" class="form-control" name="numOfOwnerChange" value="" placeholder="소유자 변경횟수">
+
+            <input type="submit" id="submit" class="btn btn-primary" value="제출">
+
+
+        </form>
+        <div>
+            <input type="text" id="searchtext1" placeholder="차량번호">
+            <button class="btn btn-primary" id="btn_search1" onclick="searchByCarNum();">검색</button>
+        </div>
+        <div>
+            <input type="text" id="searchtext2" placeholder="제조사" value="">
+            <button class="btn btn-primary" id="btn_search2" onclick="searchByCompany()">검색</button>
+        </div>
+    </div>
     <hr>
+    <% if(locals.list) {%>
     <table>
         <tr>
-            <th>CarNumber</th>
-            <th>Owner</th>
-            <th>Model</th>
-            <th>Company</th>
-            <th>numofaccident</th>
-            <th>numofownerchange</th>
+            <th>차량번호</th>
+            <th>소유자</th>
+            <th>모델명</th>
+            <th>제조회사</th>
+            <th>사고횟수</th>
+            <th>소유자변경횟수</th>
+
         </tr>
         <tbody id="list">
-
-        </tbody>
+            <% for(let i=0; i<list.length; i++){ %>
+            <tr>
+                <td><%= list[i].carNumber %></td>
+                <td><%= list[i].owner %></td>
+                <td><%= list[i].model %></td>
+                <td><%= list[i].company %></td>
+                <td><%= list[i].numOfAccident %></td>
+                <td><%= list[i].numOfOwnerChange %></td>
+            </tr>
+            <%}%>
+                    </tbody>
+    
     </table>
+    <%}%>
+    
 </body>
 
 </html>

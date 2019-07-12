@@ -31,7 +31,6 @@ app.use(function(req,res,next) {
     res.locals.user = req.session.user;
     next();
  });
- 
 
 
 
@@ -52,6 +51,8 @@ app.use(express.urlencoded({
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'public1')));
+
+
 
 
 // LOGIN_FORM(cookie)
@@ -108,7 +109,7 @@ app.post('/login_form', (req, res) => {
 
                 req.session.user = sampleuserList[userid];
                 req.session.save(function(){
-                    res.redirect('/carlist2');
+                    res.redirect('/');
                 })
                 return;
             } else{
@@ -194,10 +195,22 @@ var sampleCarList = [{
 ];
 
 
-app.get('/carlist', function(req, res){
+app.get('/carlist',(req, res)=>{
     res.render('carlist.html');
 });
+app.post('/carlist', (req,res)=>{
+    console.log(req.body);
+    if(!req.body.carNumber.length == 0)
+    sampleCarList.push(req.body);
+    console.log(sampleCarList.length);
+    
+    res.render('carlist.html',{list:sampleCarList})
+});
 
+
+
+
+/////api
 app.get('/api/carlist', function(req, res){
     res.json(sampleCarList);
 });
@@ -210,6 +223,10 @@ app.post('/api/regcar',(req,res)=>{
     // sampleCarList.push(req.body);
     
 })
+
+
+
+
 //Cookie를 이용
 app.get('/test/setCookie',(req,res)=>{
  console.log('/test/setCookie');
@@ -263,11 +280,6 @@ app.get('/ejs', (req,res)=>{
     console.log('0번 구역');
 })
 
-app.get('/carlist2',(req,res)=>{
-    console.log(req.body);
-    res.render('carlist2.html',{list:sampleCarList})
-    
-})
 
 
 app.listen(port, ()=>{

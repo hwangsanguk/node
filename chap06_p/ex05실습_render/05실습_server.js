@@ -96,7 +96,7 @@ var sampleCarList = [{
 
 
 app.get('/carlist', function(req, res){
-    res.render('carlist.html');
+    res.render('carlist.html',{list:sampleCarList});
 });
 
 app.get('/api/carlist', function(req, res){
