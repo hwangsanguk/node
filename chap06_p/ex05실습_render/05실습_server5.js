@@ -31,7 +31,7 @@ app.use(function(req,res,next) {
     next();
  });
 //----------라우터------------------------------------
- var testrouter = require('./router/testrouter');
+ var testrouter = require('./router/testrouter')();
  
  app.use('/test', testrouter);
 //----------------------------------------------------
@@ -63,11 +63,14 @@ app.use(express.urlencoded({
 }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public1')));
+app.use('/files', express.static(path.join(__dirname,'uploads')));//showimage를 보여줌
+
+
 
 // 미들웨어 아래쪽에 기능 구현
 
 //------검색 기능 구현-------------------
-app.post('/api/search',(req,res)=>{
+/*app.post('/api/search',(req,res)=>{
     console.log(req.body);
     console.log(req.body.searchText);
 
@@ -85,10 +88,38 @@ app.post('/api/search',(req,res)=>{
     });
     console.log('found = ', found);
     res.json(found);
-})
-//--------------------------------------
+})*/
 
-// LOGIN_FORM(cookie)
+//07.11 search 기능 구현 (차량 번호)
+app.post('/api/search', (req, res)=> {
+    console.log('text:',req.body);
+    // let carNum = req.body.searchText;
+    let data = req.body.searchKind;
+    let data_name = req.body.searchText;
+    let box ={};
+    
+    for(let i=0; i < sampleCarList.length; i++){
+    if(sampleCarList[i][data] == data_name){
+    box[sampleCarList[i].carNumber] = sampleCarList[i];
+    }
+    };
+    console.log(box);
+    res.json(box);
+    // let found = sampleCarList.find(function(element){
+    // //뭘 find 할지 코드 쓸 자리
+    // console.log('element = ', element);
+    // if(element.carNumber === carNum){
+    // console.log('found');
+    // return element;
+    // }
+    // });
+    // console.log('found = ', found);
+    // res.json(found);
+    });
+
+//----------------------------------------------------
+
+// LOGIN_FORM(cookie)---------------------------------
 /*app.get('/login_form', function(req, res){
     
     res.render('login_form.html');
@@ -158,7 +189,7 @@ app.post('/login_form', (req, res) => {
     }
 
 });
- //Login 끝
+ //Login 끝-------------------------------------------------
 
 
 

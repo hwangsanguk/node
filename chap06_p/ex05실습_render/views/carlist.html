@@ -9,44 +9,98 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<style>
-td{
- width: 15%;
-}
-</style>
-<script>
-function searchByCarNum(){
-    let searchText = $('#searchtext1').val();
-    let $target = $('#list');
-
-    $.ajax({
-        type: 'POST',
-        url: '/api/search',
-        dataType : 'json',
-        data : {
-            "searchText": searchText
-        },
-        success: function(item){
-            console.log('success');
-            console.log(item);
-
-            //target update
-            $target.empty();
-            $target.append(`
-            <tr>
-                <td>1</td>
-                <td>${item.carNumber}</td>
-                <td>${item.owner}</td>
-                <td>${item.model}</td>
-                <td>${item.company}</td>
-                <td>${item.numoOfAccident}</td>
-                <td>${item.numOfOwnerChange}</td>
-                <tr>
-                `);
+    <style>
+        td {
+            width: 15%;
         }
-    });
-}
-</script>
+    </style>
+    <script>
+
+
+//자동차 번호로 search (07.11)----------------------------------------
+        function searchByCarNum() {
+            //변수 지정
+            let searchText = $('#searchtext').val();
+            let searchKind = $('#search').val();        
+            // let $target = $('#list'); //$+변수명은 관습상 jQuery 변수임을 나타냄
+            $.ajax({
+                type: 'POST',
+                url: '/api/search',
+                dataType: 'json',
+                data: { "searchText": searchText, "searchKind": searchKind },
+                success: function (box) {
+                     console.log('success');
+                    console.log(box);
+
+                    //target에 있는 item update
+                    $('#list').empty();
+                    $.each(box, function (i, item) {
+                        $('#list').append(`
+                            <tr>
+                            <td>${item.carNumber}</td>
+                            <td>${item.owner}</td>
+                            <td>${item.model}</td>
+                            <td>${item.company}</td>
+                            <td>${item.numOfAccident}</td>
+                            <td>${item.numOfOwnerChange}</td>
+                            </tr>
+                        `);
+                    });
+                    // for (i = 0; i < box.length; i++) {
+                    // $('#list').append(`
+                    // <tr>
+                    // <td>${i + 1}</td>
+                    // <td>${box["22주2222"].carNumber}</td>
+                    // <td>${box.owner}</td>
+                    // <td>${box.model}</td>
+                    // <td>${box.company}</td>
+                    // <td>${box.numOfAccident}</td>
+                    // <td>${box.numOfOwnerChange}</td>
+                    // </tr>
+                    // `);
+                    // }
+                }
+            });
+        }
+
+//-------------------------------------------------------------------
+
+//-------------------------------------------------------------------
+        // 차 번호로 조회 하는 법
+
+        // function searchByCarNum() {
+        //     let searchText = $('#searchtext1').val();
+        //     let $target = $('#list');
+
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '/api/search',
+        //         dataType: 'json',
+        //         data: {
+        //             "searchText": searchText
+        //         },
+        //         success: function (item) {
+        //             console.log('success');
+        //             console.log(item);
+
+        //             //target update
+        //             $target.empty();
+        //             $target.append(`
+        //     <tr>
+        //         <td>${item.carNumber}</td>
+        //         <td>${item.owner}</td>
+        //         <td>${item.model}</td>
+        //         <td>${item.company}</td>
+        //         <td>${item.numOfAccident}</td>
+        //         <td>${item.numOfOwnerChange}</td>
+        //         <tr>
+        //         `);
+        //         }
+        //     });
+        // }
+
+//--------------------------------------------------------
+    </script>
 
 </head>
 
@@ -69,13 +123,20 @@ function searchByCarNum(){
 
 
         </form>
+        <select name="" id="search">
+            <option value="carNumber">차량번호
+
+            </option>
+            <option value="company">제조사
+                <!-- <div>
+                    <input type="text" id="searchtext2" placeholder="제조사" value="">
+                    <button class="btn btn-primary" id="btn_search2" onclick="searchByCompany()">검색</button>
+                </div> -->
+            </option>
+        </select>
         <div>
-            <input type="text" id="searchtext1" placeholder="차량번호">
+            <input type="text" id="searchtext" placeholder="">
             <button class="btn btn-primary" id="btn_search1" onclick="searchByCarNum();">검색</button>
-        </div>
-        <div>
-            <input type="text" id="searchtext2" placeholder="제조사" value="">
-            <button class="btn btn-primary" id="btn_search2" onclick="searchByCompany()">검색</button>
         </div>
     </div>
     <hr>
@@ -105,7 +166,7 @@ function searchByCarNum(){
     
     </table>
     <%}%>
-    
+
 </body>
 
 </html>
